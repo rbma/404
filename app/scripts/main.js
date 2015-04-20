@@ -13,10 +13,6 @@ var container;
 var camera, scene, renderer;
 var mesh, geometry, material;
 
-var drawCanvas;
-var drawContext;
-var image;
-var paint = false;
 
 var quantity = 400;
 
@@ -26,8 +22,7 @@ var startTime = Date.now();
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
-var imageHalfWidth;
-var imageHalfHeight;
+
 
 
 
@@ -159,7 +154,7 @@ function init() {
 	// Audio
 	//
 	var sound = new Howl({
-		urls: ['waiting.mp3'],
+		urls: ['waiting.mp3', 'waiting.ogg'],
 		loop: true,
 		volume: 0.6,
 		onend: function(){

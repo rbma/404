@@ -320,10 +320,11 @@ module.exports = function (grunt) {
           cwd: '<%= config.app %>',
           dest: '<%= config.dist %>',
           src: [
-            '*.{ico,png,txt}',
+            '*.{ico,png,txt,mp3,ogg}',
             'images/{,*/}*.webp',
             '{,*/}*.html',
-            'styles/fonts/{,*/}*.*'
+            'styles/fonts/{,*/}*.*',
+            'fonts/*'
           ]
         }, {
           src: 'node_modules/apache-server-configs/dist/.htaccess',
@@ -336,6 +337,22 @@ module.exports = function (grunt) {
         cwd: '<%= config.app %>/styles',
         dest: '.tmp/styles/',
         src: '{,*/}*.css'
+      }
+    },
+
+
+    aws: grunt.file.readJSON('env.json'),
+
+    s3: {
+      options:{
+        accessKeyId: '<%= aws.accessKeyId %>',
+        secretAccessKey: '<%= aws.secretAccessKey %>',
+        bucket: '<%= aws.bucket %>'
+      },
+
+      build:{
+        cwd: 'dist/',
+        src: '**'
       }
     },
 
