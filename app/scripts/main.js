@@ -1,7 +1,7 @@
 
 
 'use strict';
-/*global THREE:false */
+/*global THREE:false, requestAnimationFrame: false */
 
 // -------------------------------------------------
 //
@@ -18,7 +18,7 @@ var drawContext;
 var image;
 var paint = false;
 
-var quantity = 800;
+var quantity = 400;
 
 var mouseX = 0;
 var mouseY = 0;
@@ -75,6 +75,65 @@ function animate() {
 
 
 
+function makeMesh(){
+
+	geometry = new THREE.Geometry();
+
+	var texture = THREE.ImageUtils.loadTexture( 'images/broken.png', null, animate );
+	texture.magFilter = THREE.LinearMipMapLinearFilter;
+	texture.minFilter = THREE.LinearMipMapLinearFilter;
+
+	var fog = new THREE.Fog( 0xececec, - 100, 6000 );
+
+	material = new THREE.ShaderMaterial( {
+
+		uniforms: {
+
+			'map': { type: 't', value: texture },
+			'fogColor' : { type: 'c', value: fog.color },
+			'fogNear' : { type: 'f', value: fog.near },
+			'fogFar' : { type: 'f', value: fog.far },
+
+		},
+		vertexShader: document.getElementById( 'vertex' ).textContent,
+		fragmentShader: document.getElementById( 'fragment' ).textContent,
+		transparent: true
+
+	} );
+
+
+	var bufferGeometry = new THREE.PlaneGeometry(32,32);
+	var plane = new THREE.Mesh(bufferGeometry);
+
+	for ( var i = 0; i < quantity; i+=20 ) {
+
+		plane.position.x = Math.random() * 1000 - 500;
+		plane.position.y = - Math.random() * Math.random() * 500 - 15;
+		plane.position.z = i;
+		plane.rotation.z = Math.random() * Math.PI;
+		plane.scale.x = plane.scale.y = Math.random() * Math.random() * 1.5 + 0.5;
+
+		plane.updateMatrix();
+		geometry.merge(plane.geometry, plane.matrix);
+
+	}
+
+	mesh = new THREE.Mesh( geometry, material );
+	scene.add( mesh );
+
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.z = -quantity;
+	scene.add( mesh );
+
+	mesh = new THREE.Mesh( geometry, material );
+	mesh.position.z = -quantity * 2;
+	scene.add( mesh );
+
+}
+
+
+
+
 
 function init() {
 
@@ -122,53 +181,8 @@ function init() {
 
 	scene = new THREE.Scene();
 
-	geometry = new THREE.Geometry();
 
-	var texture = THREE.ImageUtils.loadTexture( 'images/broken.png', null, animate );
-	texture.magFilter = THREE.LinearMipMapLinearFilter;
-	texture.minFilter = THREE.LinearMipMapLinearFilter;
-
-	var fog = new THREE.Fog( 0xececec, - 100, 6000 );
-
-	material = new THREE.ShaderMaterial( {
-
-		uniforms: {
-
-			'map': { type: 't', value: texture },
-			'fogColor' : { type: 'c', value: fog.color },
-			'fogNear' : { type: 'f', value: fog.near },
-			'fogFar' : { type: 'f', value: fog.far },
-
-		},
-		vertexShader: document.getElementById( 'vertex' ).textContent,
-		fragmentShader: document.getElementById( 'fragment' ).textContent,
-		transparent: true
-
-	} );
-
-
-	var bufferGeometry = new THREE.PlaneGeometry(16,16);
-	var plane = new THREE.Mesh(bufferGeometry);
-
-	for ( var i = 0; i < quantity; i++ ) {
-
-		plane.position.x = Math.random() * 1000 - 500;
-		plane.position.y = - Math.random() * Math.random() * 500 - 15;
-		plane.position.z = i;
-		plane.rotation.z = Math.random() * Math.PI;
-		plane.scale.x = plane.scale.y = Math.random() * Math.random() * 1.5 + 0.5;
-
-		plane.updateMatrix();
-		geometry.merge(plane.geometry, plane.matrix);
-
-	}
-
-	mesh = new THREE.Mesh( geometry, material );
-	scene.add( mesh );
-
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.z = -quantity;
-	scene.add( mesh );
+	makeMesh();
 
 	
 
