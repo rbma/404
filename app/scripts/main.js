@@ -1,203 +1,228 @@
-
-
-'use strict';
-/*global THREE:false, requestAnimationFrame: false */
-
 // -------------------------------------------------
 //
-// Globals
+// Graphics + Audio
 // 
 // -------------------------------------------------
 
+/* global THREE:false, TWEEN:false, requestAnimationFrame:false */
+
+'use strict';
+
+
 var container;
-var camera, scene, renderer;
-var mesh, geometry, material;
-
-
-var quantity = 400;
-
+var camera;
+var scene;
+var renderer;
+var particle;
 var mouseX = 0;
 var mouseY = 0;
-var startTime = Date.now();
+var totalParticles = 15;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 
+var images = ['broken.png', 'bad.png'];
 
 
-// ------------------------------------------------
-// Mouse movements
+
+// -------------------------------------------------
 //
+// Return Random Image To Use
+// 
+// -------------------------------------------------
 
-function onDocumentMouseMove( event ) {
-	mouseX = ( event.clientX - windowHalfX ) * 0.25;
-	mouseY = ( event.clientY - windowHalfY ) * 0.15;
+
+function randomImage(){
+	var image = 'images/' + images[Math.floor(Math.random() * images.length)];
+	return THREE.ImageUtils.loadTexture(image);
 }
 
-// ------------------------------------------------
-// Resize
+
+
+// -------------------------------------------------
 //
+// Resize
+// 
+// -------------------------------------------------
+
 
 function onWindowResize() {
 
+	windowHalfX = window.innerWidth / 2;
+	windowHalfY = window.innerHeight / 2;
+
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
-
 	renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
 
 
-// ------------------------------------------------
-// Animate
+
+
+
+// -------------------------------------------------
 //
+// Listeners
+// 
+// -------------------------------------------------
+function onDocumentMouseMove( event ) {
+	mouseX = event.clientX - windowHalfX;
+	mouseY = event.clientY - windowHalfY;
+}
 
-function animate() {
 
-	requestAnimationFrame( animate );
+function onDocumentTouchStart( event ) {
+	if ( event.touches.length === 1 ) {
+		event.preventDefault();
+		mouseX = event.touches[ 0 ].pageX - windowHalfX;
+		mouseY = event.touches[ 0 ].pageY - windowHalfY;
+	}
+}
 
-	var position = Math.floor((( Date.now() - startTime ) * 0.1 ) % quantity);
+function onDocumentTouchMove( event ) {
+	if ( event.touches.length === 1 ) {
 
-	camera.position.x += ( mouseX - camera.position.x ) * 0.01;
+		event.preventDefault();
+
+		mouseX = event.touches[ 0 ].pageX - windowHalfX;
+		mouseY = event.touches[ 0 ].pageY - windowHalfY;
+	}
+}
+
+
+
+
+
+
+
+// -------------------------------------------------
+//
+// Particle Movements
+// 
+// -------------------------------------------------
+function initParticle( particle, delay ) {
+
+	var particle = this instanceof THREE.Sprite ? this : particle;
+	var delay = delay !== undefined ? delay : 0;
+
+	particle.position.set( 0, 0, 0 );
+	particle.scale.x = particle.scale.y = Math.random() * 64 + 32;
+
+	new TWEEN.Tween( particle )
+		.delay( delay )
+		.to( {}, 9000 )
+		.onComplete( initParticle )
+		.start();
+
+	new TWEEN.Tween( particle.position )
+		.delay( delay )
+		.to( { x: Math.random() * 4000 - 2000, y: Math.random() * 1000 - 500, z: Math.random() * 4000 - 2000 }, 10000 )
+		.start();
+
+
+}
+
+
+
+// -------------------------------------------------
+//
+// Animate
+// 
+// -------------------------------------------------
+function render() {
+	TWEEN.update();
+
+	camera.position.x += ( mouseX - camera.position.x ) * 0.05;
 	camera.position.y += ( - mouseY - camera.position.y ) * 0.05;
-	camera.position.z = -position + quantity;
+	camera.lookAt( scene.position );
 
 	renderer.render( scene, camera );
+}
 
+
+function animate() {
+	requestAnimationFrame( animate );
+	render();
 }
 
 
 
 
-function makeMesh(){
+// -------------------------------------------------
+//
+// Audio
+// 
+// -------------------------------------------------
+function initAudio(){
+	var sound = new Howl({
+		urls: ['waiting.mp3', 'waiting.ogg'],
+		loop: true,
+		volume: 0.5,
+		onened: function(){
+			sound.play();
+		}
+	});
 
-	geometry = new THREE.Geometry();
-
-	var texture = THREE.ImageUtils.loadTexture( 'images/broken.png', null, animate );
-	texture.magFilter = THREE.LinearMipMapLinearFilter;
-	texture.minFilter = THREE.LinearMipMapLinearFilter;
-
-	var fog = new THREE.Fog( 0xececec, - 100, 6000 );
-
-	material = new THREE.ShaderMaterial( {
-
-		uniforms: {
-
-			'map': { type: 't', value: texture },
-			'fogColor' : { type: 'c', value: fog.color },
-			'fogNear' : { type: 'f', value: fog.near },
-			'fogFar' : { type: 'f', value: fog.far },
-
-		},
-		vertexShader: document.getElementById( 'vertex' ).textContent,
-		fragmentShader: document.getElementById( 'fragment' ).textContent,
-		transparent: true
-
-	} );
-
-
-	var bufferGeometry = new THREE.PlaneGeometry(32,32);
-	var plane = new THREE.Mesh(bufferGeometry);
-
-	for ( var i = 0; i < quantity; i+=20 ) {
-
-		plane.position.x = Math.random() * 1000 - 500;
-		plane.position.y = - Math.random() * Math.random() * 500 - 15;
-		plane.position.z = i;
-		plane.rotation.z = Math.random() * Math.PI;
-		plane.scale.x = plane.scale.y = Math.random() * Math.random() * 1.5 + 0.5;
-
-		plane.updateMatrix();
-		geometry.merge(plane.geometry, plane.matrix);
-
-	}
-
-	mesh = new THREE.Mesh( geometry, material );
-	scene.add( mesh );
-
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.z = -quantity;
-	scene.add( mesh );
-
-	mesh = new THREE.Mesh( geometry, material );
-	mesh.position.z = -quantity * 2;
-	scene.add( mesh );
-
+	sound.play();
 }
 
 
 
 
+
+// -------------------------------------------------
+//
+// Init
+// 
+// -------------------------------------------------
 
 function init() {
 
 	container = document.createElement( 'div' );
 	document.body.appendChild( container );
 
+	camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 5000 );
+	camera.position.z = 1000;
 
-	// ------------------------------------------------
-	// Canvas positioning
-	//
-	
-	container.style.zIndex = 9;
-	container.style.width = window.innerWidth;
-	container.style.height = window.innerHeight;
-	container.style.top = 0;
-	container.style.left = 0;
-	container.style.position = 'absolute';
+
+	initAudio();
 
 	
-
-
-	// ------------------------------------------------
-	// Audio
-	//
-	var sound = new Howl({
-		urls: ['waiting.mp3', 'waiting.ogg'],
-		loop: true,
-		volume: 0.6,
-		onend: function(){
-			sound.play();
-		}
-	});
-
-	sound.play();
-	
-
-
-
-	// ------------------------------------------------
-	// Three stuff
-	//
-	
-	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 3000 );
-	camera.position.z = 6000;
-
 	scene = new THREE.Scene();
 
-
-	makeMesh();
-
 	
 
-	// ------------------------------------------------
-	// Set up renderer
-	//
-	
-	renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
+	for ( var i = 0; i < totalParticles; i++ ) {
+
+		var material = new THREE.SpriteMaterial({
+			map: randomImage()
+		});
+
+		particle = new THREE.Sprite( material );
+
+		initParticle( particle, i * 10 );
+
+		scene.add( particle );
+	}
+
+	renderer = new THREE.CanvasRenderer({alpha: true, antialias: true});
+	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	container.appendChild( renderer.domElement );
 
 
-	// ------------------------------------------------
-	// Add binds
-	//
-	
 	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+	document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+
+
 	window.addEventListener( 'resize', onWindowResize, false );
 
 }
 
 
+
 init();
+animate();
