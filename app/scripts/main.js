@@ -22,7 +22,7 @@ var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 
-var images = ['broken.png', 'broken.png', 'broken.png', 'bad.png'];
+var images = ['broken.png', 'broken.png', 'broken.png', 'bad.png', 'frown.png'];
 
 
 
