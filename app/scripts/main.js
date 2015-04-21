@@ -16,13 +16,13 @@ var renderer;
 var particle;
 var mouseX = 0;
 var mouseY = 0;
-var totalParticles = 55;
+var totalParticles = 400;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 
-var images = ['broken.png', 'broken.png', 'broken.png', 'bad.png', 'frown.png'];
+var images = ['broken.png', 'broken.png', 'broken.png', 'bad.png', 'frown.png', 'warn.png'];
 
 
 
