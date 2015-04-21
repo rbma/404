@@ -16,7 +16,7 @@ var renderer;
 var particle;
 var mouseX = 0;
 var mouseY = 0;
-var totalParticles = 15;
+var totalParticles = 55;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
