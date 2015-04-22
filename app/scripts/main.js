@@ -157,10 +157,10 @@ function animate() {
 // -------------------------------------------------
 function initAudio(){
 	var sound = new Howl({
-		urls: ['waiting.mp3', 'waiting.ogg'],
+		urls: ['rbma-404.mp3', 'rbma-404.ogg'],
 		loop: true,
 		volume: 0.5,
-		onened: function(){
+		onend: function(){
 			sound.play();
 		}
 	});
