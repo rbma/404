@@ -187,7 +187,7 @@ function init() {
 	camera.position.z = 1000;
 
 
-	initAudio();
+	// initAudio();
 
 	
 	scene = new THREE.Scene();
