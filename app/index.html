@@ -2,10 +2,9 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>404</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" href="/favicon.ico">
+    <title>404. Page Not Found - Red Bull Music Academy</title>
+    <meta name="description" content="Unfortunately, this page does not exist my friend.">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
@@ -24,36 +23,6 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <script id="vertex" type="x-shader/x-vertex">
-      varying vec2 vUv;
-
-      void main(){
-
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    </script>
-
-    <script id="fragment" type="x-shader/x-fragment">
-      uniform sampler2D map;
-      uniform vec3 fogColor;
-      uniform float fogFar;
-      uniform float fogNear;
-
-      varying vec2 vUv;
-
-      void main(){
-
-        float depth = gl_FragCoord.z / gl_FragCoord.w;
-        float fogFactor = smoothstep(fogNear, fogFar, depth);
-
-        gl_FragColor = texture2D(map, vUv);
-        gl_FragColor.w *= pow(gl_FragCoord.z, 20.0);
-        gl_FragColor = mix(gl_FragColor, vec4(fogColor, gl_FragColor.w), fogFactor);
-
-      }
-
-    </script>
 
     <section class="four-oh-four-container">
       <div class="message">
@@ -78,15 +47,6 @@
     <script src="lib/CanvasRenderer.js"></script>
     <script src="lib/tween.js"></script>
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-    <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='//www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
         <script src="scripts/main.js"></script>
