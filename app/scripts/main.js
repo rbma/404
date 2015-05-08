@@ -100,12 +100,11 @@ function onDocumentTouchMove( event ) {
 // -------------------------------------------------
 //
 // Particle Movements
-// 
+//
 // -------------------------------------------------
 function initParticle( particle, delay ) {
-
-	var particle = this instanceof THREE.Sprite ? this : particle;
-	var delay = delay !== undefined ? delay : 0;
+	particle = this instanceof THREE.Sprite ? this : particle;
+	delay = delay !== undefined ? delay : 0;
 
 	particle.position.set( windowHalfX, windowHalfY, 0 );
 	particle.scale.x = particle.scale.y = Math.random() * 64 + 32;
