@@ -224,5 +224,8 @@ function init() {
 
 
 
-init();
-animate();
+window.onload = function(){
+	init();
+	animate();
+};
+
