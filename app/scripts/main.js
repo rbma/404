@@ -1,7 +1,7 @@
 // -------------------------------------------------
 //
 // Graphics + Audio
-// 
+//
 // -------------------------------------------------
 
 /* global THREE:false, TWEEN:false, requestAnimationFrame:false */
@@ -29,7 +29,7 @@ var images = ['broken.png', 'broken.png', 'broken.png', 'bad.png', 'frown.png', 
 // -------------------------------------------------
 //
 // Return Random Image To Use
-// 
+//
 // -------------------------------------------------
 
 
@@ -43,7 +43,7 @@ function randomImage(){
 // -------------------------------------------------
 //
 // Resize
-// 
+//
 // -------------------------------------------------
 
 
@@ -65,7 +65,7 @@ function onWindowResize() {
 // -------------------------------------------------
 //
 // Listeners
-// 
+//
 // -------------------------------------------------
 function onDocumentMouseMove( event ) {
 	mouseX = event.clientX - windowHalfX;
@@ -128,7 +128,7 @@ function initParticle( particle, delay ) {
 // -------------------------------------------------
 //
 // Animate
-// 
+//
 // -------------------------------------------------
 function render() {
 	TWEEN.update();
@@ -151,36 +151,14 @@ function animate() {
 
 // -------------------------------------------------
 //
-// Audio
-// 
-// -------------------------------------------------
-function initAudio(){
-	var sound = new Howl({
-		urls: ['rbma-404.mp3', 'rbma-404.ogg'],
-		loop: true,
-		volume: 0.5,
-		onend: function(){
-			sound.play();
-		}
-	});
-
-	sound.play();
-}
-
-
-
-
-
-// -------------------------------------------------
-//
 // Init
-// 
+//
 // -------------------------------------------------
 
 function init() {
 
 	container = document.createElement( 'div' );
-	document.body.appendChild( container );
+	document.querySelector('.four-oh-four-container').appendChild( container );
 
 	camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 5000 );
 	camera.position.z = 1000;
@@ -188,10 +166,10 @@ function init() {
 
 	// initAudio();
 
-	
+
 	scene = new THREE.Scene();
 
-	
+
 
 	for ( var i = 0; i < totalParticles; i++ ) {
 
@@ -227,4 +205,3 @@ window.onload = function(){
 	init();
 	animate();
 };
-

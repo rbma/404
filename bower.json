@@ -2,10 +2,7 @@
   "name": "404",
   "private": true,
   "dependencies": {
-    "jquery": "~1.11.1",
-    "modernizr": "~2.8.2",
     "three.js": "~0.70.0",
-    "bourbon": "~4.2.2",
-    "howler": "~1.1.25"
+    "bourbon": "~4.2.2"
   }
 }
